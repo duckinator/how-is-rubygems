@@ -3,19 +3,30 @@
 require 'how_is'
 
 date = Date.strptime(Time.now.to_i.to_s, '%s').strftime('%Y-%m-%d')
-filename = "_posts/#{date}-report.html"
 
-header = <<EOF
+# JSON Report.
+
+json_filename = "json/#{date}.json"
+
+json_report = HowIs.generate_report(repository: 'rubygems/rubygems', format: 'json')
+
+File.open(json_filename, 'w') {|f| f.puts json_report }
+
+# HTML Report.
+
+html_filename = "_posts/#{date}-report.html"
+
+html_header = <<EOF
 ---
 title: #{date} Report
 layout: default
 ---
 EOF
 
-report = HowIs.generate_report(repository: 'rubygems/rubygems', format: 'html')
+html_report = HowIs.generate_report(repository: 'rubygems/rubygems', from_file: json_filename, format: 'html')
 
-File.open(filename, 'w') do |f|
-  f.puts header
+File.open(html_filename, 'w') do |f|
+  f.puts html_header
   f.puts
-  f.puts report
+  f.puts html_report
 end
