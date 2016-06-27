@@ -12,7 +12,7 @@ layout: default
 ---
 EOF
 
-report = HowIs.generate_report(repository: 'rubygems/rubygems')
+report = HowIs.generate_report(repository: 'rubygems/rubygems', format: 'html')
 
 File.open(filename, 'w') do |f|
   f.puts header
