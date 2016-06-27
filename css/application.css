@@ -1,0 +1,68 @@
+/* Defaults and body. */
+
+html {
+    box-sizing: border-box;
+    text-rendering: optimizeLegibility;
+}
+*, *:before, *:after { box-sizing: inherit; }
+
+html, body {
+    margin: 0;
+    padding: 0;
+
+    font-family: sans-serif;
+}
+
+h1 { font-size: 2.5em; }
+h2 { font-size: 1.5em; }
+h3 { font-size: 1.3em; }
+h4 { font-size: 1.2em; }
+h5 { font-size: 1.1em; }
+
+h1, h2 { margin: 0; }
+h1 { padding: 0.5em 0; }
+h2 { padding: 1em 0 0 0; }
+h1 + h2 { padding-top: 0; }
+
+table { padding: 1em 0; }
+
+/* Content. */
+
+main {
+    min-height: 100%;
+    max-width: 800px;
+    max-width: 75ch;
+    margin: 0 auto;
+}
+
+/* Navigation. */
+nav {
+    padding: 0 0 2em 0;
+}
+
+nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+nav li {
+    display: inline-block;
+    padding-right: 1em;
+}
+nav li:last-child { padding-right: 0; }
+
+/* Horiontal bar graphs */
+
+.horizontal-bar-graph {
+  position: relative;
+  width: 100%;
+}
+.horizontal-bar-graph .fill {
+  display: inline-block;
+  background: #CCC;
+}
+
+
+/* HACK */
+header ~ h1 { display: none; }
