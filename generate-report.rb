@@ -17,14 +17,14 @@ report_data = {
   friendly_date: friendly_date,
 }
 
-def jekyll_header(jekyll_config, report_data)
-  headers = jekyll_config.map { |k, v|
+def generate_frontmatter(frontmatter, report_data)
+  frontmatter = frontmatter.map { |k, v|
     v = v % report_data
 
     [k, v]
   }.to_h
 
-  YAML.dump(headers)
+  YAML.dump(frontmatter)
 end
 
 config['reports'].each do |format, report_config|
@@ -34,8 +34,8 @@ config['reports'].each do |format, report_config|
   report = HowIs::Report.export(analysis, format)
 
   File.open(file, 'w') do |f|
-    if report_config['jekyll']
-      f.puts jekyll_header(report_config['jekyll'], report_data)
+    if report_config['frontmatter']
+      f.puts generate_frontmatter(report_config['frontmatter'], report_data)
       f.puts "---"
       f.puts
     end

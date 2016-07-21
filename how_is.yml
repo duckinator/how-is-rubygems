@@ -2,7 +2,7 @@ repository: rubygems/rubygems
 reports:
   html:
     directory: _posts
-    jekyll:
+    frontmatter:
       title: "%{date} Report"
       layout: default
     filename: "%{date}-report.html"
