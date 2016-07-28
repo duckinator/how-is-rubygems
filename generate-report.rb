@@ -1,32 +1,45 @@
 #!/usr/bin/env ruby
 
 require 'how_is'
+require 'yaml'
 
-date = Date.strptime(Time.now.to_i.to_s, '%s').strftime('%Y-%m-%d')
+config = YAML.load_file('how_is.yml')
 
-# JSON Report.
+date = Date.strptime(Time.now.to_i.to_s, '%s')
+date_string = date.strftime('%Y-%m-%d')
+friendly_date = date.strftime('%B %d, %y')
 
-json_filename = "json/#{date}.json"
+analysis = HowIs.generate_analysis(repository: config['repository'])
 
-json_report = HowIs.generate_report(repository: 'rubygems/rubygems', format: 'json')
+report_data = {
+  repository: config['repository'],
+  date: date,
+  friendly_date: friendly_date,
+}
 
-File.open(json_filename, 'w') {|f| f.puts json_report }
+def generate_frontmatter(frontmatter, report_data)
+  frontmatter = frontmatter.map { |k, v|
+    v = v % report_data
 
-# HTML Report.
+    [k, v]
+  }.to_h
 
-html_filename = "_posts/#{date}-report.html"
+  YAML.dump(frontmatter)
+end
 
-html_header = <<EOF
----
-title: #{date} Report
-layout: default
----
-EOF
+config['reports'].each do |format, report_config|
+  filename = report_config['filename'] % report_data
+  file = File.join(report_config['directory'], filename)
 
-html_report = HowIs.generate_report(repository: 'rubygems/rubygems', from_file: json_filename, format: 'html')
+  report = HowIs::Report.export(analysis, format)
 
-File.open(html_filename, 'w') do |f|
-  f.puts html_header
-  f.puts
-  f.puts html_report
+  File.open(file, 'w') do |f|
+    if report_config['frontmatter']
+      f.puts generate_frontmatter(report_config['frontmatter'], report_data)
+      f.puts "---"
+      f.puts
+    end
+
+    f.puts report
+  end
 end
